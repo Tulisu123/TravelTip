@@ -41,10 +41,14 @@ function renderLocs(locs) {
 
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
+        const userDistanceStr = utilService.formatDistance(
+            mapService.getGUserPos(), { lat: loc.geo.lat, lng: loc.geo.lng })
+
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
+                <span>${userDistanceStr}</span>
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
@@ -227,8 +231,11 @@ function displayLoc(loc) {
     mapService.setMarker(loc)
 
     const el = document.querySelector('.selected-loc')
+    const userDistanceStr = utilService.formatDistance(
+        mapService.getGUserPos(), { lat: loc.geo.lat, lng: loc.geo.lng })
+
     el.querySelector('.loc-name').innerText = loc.name
-    el.querySelector('.loc-address').innerText = loc.geo.address
+     el.querySelector('.loc-address-or-distance').innerText = userDistanceStr ? userDistanceStr : loc.geo.address
     el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
     el.querySelector('[name=loc-copier]').value = window.location
     el.classList.add('show')
