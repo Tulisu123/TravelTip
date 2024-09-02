@@ -3,7 +3,7 @@ import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
 window.onload = onInit
-
+//testing 9/2
 // To make things easier in this project structure 
 // functions that are called from DOM are defined on a global app object
 window.app = {
