@@ -1,0 +1,19 @@
+.add-edit-dialog{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
+    width: 300px;
+    padding-top: 30px;
+}
+
+.close-dialog-btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.loc-name {
+    margin-top: 20px;
+    position: relative;
+}
