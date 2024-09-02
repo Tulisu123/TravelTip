@@ -17,7 +17,8 @@ window.app = {
     onSetSortBy,
     onSetFilterBy,
 }
-
+// test by boaz
+//test 2
 function onInit() {
     getFilterByFromQueryParams()
     loadAndRenderLocs()
