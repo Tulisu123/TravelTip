@@ -8,7 +8,8 @@ export const utilService = {
     elapsedTime,
     getColors,
     updateQueryParams,
-    getDistance
+    getDistance,
+    formatDistance
 }
 
 function saveToStorage(key, value) {
@@ -116,4 +117,11 @@ function getDistance(latLng1, latLng2, unit) {
         dist = +dist.toFixed(2)
         return dist
     }
+}
+
+function formatDistance(userPos, targetLoc) {
+    if (!userPos) return ''
+
+    const distance = getDistance(userPos, targetLoc, 'K')
+    return `Distance: ${distance.toFixed(2)} KM.`
 }
