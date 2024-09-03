@@ -9,7 +9,12 @@ export const mapService = {
 }
 
 // TODO: Enter your API Key
-const API_KEY = 'AIzaSyB2Tl6TSR2BIF9Vehtx0PGargBCk_Efftk'
+// Starter project API key
+// const API_KEY = 'AIzaSyB2Tl6TSR2BIF9Vehtx0PGargBCk_Efftk'
+
+// Personal unrestricted API key with GeoCoding enabled
+const API_KEY = 'AIzaSyDlyj0-wtb9DqDW6T3pSfqTGWk3sz8-Jhw'
+
 var gMap
 var gMarker
 
