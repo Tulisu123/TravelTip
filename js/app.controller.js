@@ -43,14 +43,14 @@ function renderLocs(locs) {
 
     var strHTML = locs.map(loc => {
         const className = (loc.id === selectedLocId) ? 'active' : ''
-        const userDistanceStr = utilService.formatDistance(
-            mapService.getGUserPos(), { lat: loc.geo.lat, lng: loc.geo.lng })
+        const userDistanceStrHTML = utilService.formatUserDistanceStrHTML(
+            gUserPos, { lat: loc.geo.lat, lng: loc.geo.lng })
 
         return `
         <li class="loc ${className}" data-id="${loc.id}">
             <h4>  
                 <span>${loc.name}</span>
-                <span>${userDistanceStr}</span>
+                ${userDistanceStrHTML}
                 <span title="${loc.rate} stars">${'★'.repeat(loc.rate)}</span>
             </h4>
             <p class="muted">
