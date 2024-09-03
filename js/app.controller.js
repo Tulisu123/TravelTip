@@ -21,6 +21,8 @@ window.app = {
     onSubmitDialog
 }
 
+let gUserPos = null
+
 function onInit() {
     getFilterByFromQueryParams()
     loadAndRenderLocs()
