@@ -51,12 +51,13 @@ export const locService = {
     save,
     setFilterBy,
     setSortBy,
-    getLocCountByRateMap
+    getLocCountByRateMap,
+    getLocCountByLastUpdatedMap
 }
 
 export const mapService = {
     initMap,
-    getPosition,
+    getUserPosition,
     setMarker,
     panTo,
     lookupAddressGeo,
@@ -75,10 +76,13 @@ window.app = {
     onSelectLoc,
     onPanToUserPos,
     onSearchAddress,
+    onOpenDialog,
     onCopyLoc,
     onShareLoc,
     onSetSortBy,
-    onSetFilterBy
+    onSetFilterBy,
+    onCloseDialog,
+    onSubmitDialog
 }
 ```
 
