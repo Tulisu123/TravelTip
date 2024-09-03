@@ -110,7 +110,7 @@ function onSearchAddress(ev) {
 function onAddLoc(geo) {
     onOpenDialog()
 
-    onSubmitDialog().then(({name,rating})=>{
+    onSubmitDialog(geo).then(({name,rating})=>{
         const locName = name
         console.log(locName)
         console.log(rating)
@@ -136,20 +136,25 @@ function onAddLoc(geo) {
 }
 
 
-function onSubmitDialog() {
+function onSubmitDialog(geo = null) {
     return new Promise(resolve => {
         const elNameInput = document.querySelector('.loc-input')
         const elRatingInput = document.querySelector('.rating-input')
         const elSubmitBtn = document.querySelector('.submit-btn')
+
+        if (geo) { 
+            elNameInput.value = geo.address
+            elRatingInput.value = 3
+        }  
 
         elSubmitBtn.addEventListener('click', () =>{
             const name = elNameInput.value
             const rating = elRatingInput.value
     
             if (name && rating) {
-                resolve({ name, rating });
+                resolve({ name, rating })
             } else {
-                resolve(null); 
+                resolve(null)
             }
         })
     })
@@ -192,31 +197,39 @@ function onPanToUserPos() {
             flashMsg('Cannot get your position')
         })
 }
+
 function onUpdateLoc(locId) {
     locService.getById(locId)
         .then(loc => {
             return onOpenDialog().then(() => {
-                return onSubmitDialog();
+                // Pre set the values in the dialog
+                const elNameInput = document.querySelector('.loc-input')
+                const elRatingInput = document.querySelector('.rating-input')                
+                elNameInput.value = loc.name
+                elRatingInput.value = loc.rate
+
+                return onSubmitDialog()
             }).then(({name, rating}) => {
                 if (rating !== loc.rate || name !== loc.name) {
-                    loc.rate = rating;
-                    loc.name = name;
+                    loc.rate = rating
+                    loc.name = name
                     onCloseDialog()
-                    return locService.save(loc);
+                    return locService.save(loc)
                 }
             }).then(savedLoc => {
                 if (savedLoc) {
-                    console.log('Location saved');
-                    flashMsg(`Rate was set to: ${savedLoc.rate}`);
-                    return loadAndRenderLocs();
+                    console.log('Location saved')
+                    flashMsg(`Rate was set to: ${savedLoc.rate}`)
+                    return loadAndRenderLocs()
                 }
             })
         })
         .catch(err => {
-            console.error('OOPs:', err);
-            flashMsg('Cannot update location');
-        });
+            console.error('OOPs:', err)
+            flashMsg('Cannot update location')
+        })
 }
+
 function onSelectLoc(locId) {
     return locService.getById(locId)
         .then(displayLoc)
