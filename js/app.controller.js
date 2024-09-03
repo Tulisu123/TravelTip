@@ -233,13 +233,17 @@ function displayLoc(loc) {
     mapService.setMarker(loc)
 
     const el = document.querySelector('.selected-loc')
-    const userDistanceStr = utilService.formatDistance(
-        mapService.getGUserPos(), { lat: loc.geo.lat, lng: loc.geo.lng })
 
     el.querySelector('.loc-name').innerText = loc.name
-     el.querySelector('.loc-address-or-distance').innerText = userDistanceStr ? userDistanceStr : loc.geo.address
+    el.querySelector('.loc-address').innerText = loc.geo.address
     el.querySelector('.loc-rate').innerHTML = '★'.repeat(loc.rate)
     el.querySelector('[name=loc-copier]').value = window.location
+
+    if (gUserPos) {
+        const userDistance = utilService.getDistance(gUserPos, loc.geo)
+        el.querySelector('.loc-distance') = 'Distance: ' + userDistance + ' KM.'
+    } 
+    
     el.classList.add('show')
 
     utilService.updateQueryParams({ locId: loc.id })
