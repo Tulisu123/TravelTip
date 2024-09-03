@@ -12,19 +12,22 @@ window.app = {
     onSelectLoc,
     onPanToUserPos,
     onSearchAddress,
+    onOpenDialog,
     onCopyLoc,
     onShareLoc,
     onSetSortBy,
     onSetFilterBy,
+    onCloseDialog,
+    onSubmitDialog
 }
-// test by boaz
-//test 2
+
 function onInit() {
     getFilterByFromQueryParams()
     loadAndRenderLocs()
     mapService.initMap()
         .then(() => {
             // onPanToTokyo()
+            console.log('adding the event listener for add location')
             mapService.addClickListener(onAddLoc)
         })
         .catch(err => {
@@ -75,8 +78,8 @@ function renderLocs(locs) {
 
 function onRemoveLoc(locId) {
     const isRemoveLoc = confirm('Are you sure you want to delete location?')
-    if (isRemoveLoc) return
-    
+    if (!isRemoveLoc) return
+
     locService.remove(locId)
         .then(() => {
             flashMsg('Location removed')
@@ -103,24 +106,65 @@ function onSearchAddress(ev) {
 }
 
 function onAddLoc(geo) {
-    const locName = prompt('Loc name', geo.address || 'Just a place')
-    if (!locName) return
+    onOpenDialog()
 
-    const loc = {
-        name: locName,
-        rate: +prompt(`Rate (1-5)`, '3'),
-        geo
-    }
-    locService.save(loc)
-        .then((savedLoc) => {
-            flashMsg(`Added Location (id: ${savedLoc.id})`)
-            utilService.updateQueryParams({ locId: savedLoc.id })
-            loadAndRenderLocs()
+    onSubmitDialog().then(({name,rating})=>{
+        const locName = name
+        console.log(locName)
+        console.log(rating)
+        if (!locName) return null
+    
+        const loc = {
+            name: locName,
+            rate: rating,
+            geo
+        }
+        locService.save(loc)
+            .then((savedLoc) => {
+                flashMsg(`Added Location (id: ${savedLoc.id})`)
+                utilService.updateQueryParams({ locId: savedLoc.id })
+                loadAndRenderLocs()
+            })
+            .catch(err => {
+                console.error('OOPs:', err)
+                flashMsg('Cannot add location')
+            })  
+            onCloseDialog()
+    })
+}
+
+
+function onSubmitDialog() {
+    return new Promise(resolve => {
+        const elNameInput = document.querySelector('.loc-input')
+        const elRatingInput = document.querySelector('.rating-input')
+        const elSubmitBtn = document.querySelector('.submit-btn')
+
+        elSubmitBtn.addEventListener('click', () =>{
+            const name = elNameInput.value
+            const rating = elRatingInput.value
+    
+            if (name && rating) {
+                resolve({ name, rating });
+            } else {
+                resolve(null); 
+            }
         })
-        .catch(err => {
-            console.error('OOPs:', err)
-            flashMsg('Cannot add location')
-        })
+    })
+}
+
+function onOpenDialog() {
+    return new Promise(resolve => {
+        const elDialog = document.querySelector('.add-edit-dialog')
+        elDialog.classList.remove('display-none')
+        resolve(elDialog.showModal())
+    })
+}
+
+function onCloseDialog() {
+    const elDialog = document.querySelector('.add-edit-dialog')
+    elDialog.classList.add('display-none')
+    elDialog.close()
 }
 
 function loadAndRenderLocs() {
@@ -145,27 +189,31 @@ function onPanToUserPos() {
             flashMsg('Cannot get your position')
         })
 }
-
 function onUpdateLoc(locId) {
     locService.getById(locId)
         .then(loc => {
-            const rate = prompt('New rate?', loc.rate)
-            if (rate && rate !== loc.rate) {
-                loc.rate = rate
-                locService.save(loc)
-                    .then(savedLoc => {
-                        flashMsg(`Rate was set to: ${savedLoc.rate}`)
-                        loadAndRenderLocs()
-                    })
-                    .catch(err => {
-                        console.error('OOPs:', err)
-                        flashMsg('Cannot update location')
-                    })
-
-            }
+            return onOpenDialog().then(() => {
+                return onSubmitDialog();
+            }).then(({name, rating}) => {
+                if (rating !== loc.rate || name !== loc.name) {
+                    loc.rate = rating;
+                    loc.name = name;
+                    onCloseDialog()
+                    return locService.save(loc);
+                }
+            }).then(savedLoc => {
+                if (savedLoc) {
+                    console.log('Location saved');
+                    flashMsg(`Rate was set to: ${savedLoc.rate}`);
+                    return loadAndRenderLocs();
+                }
+            })
         })
+        .catch(err => {
+            console.error('OOPs:', err);
+            flashMsg('Cannot update location');
+        });
 }
-
 function onSelectLoc(locId) {
     return locService.getById(locId)
         .then(displayLoc)
@@ -234,7 +282,7 @@ function getFilterByFromQueryParams() {
     const queryParams = new URLSearchParams(window.location.search)
     const txt = queryParams.get('txt') || ''
     const minRate = queryParams.get('minRate') || 0
-    locService.setFilterBy({txt, minRate})
+    locService.setFilterBy({ txt, minRate })
 
     document.querySelector('input[name="filter-by-txt"]').value = txt
     document.querySelector('input[name="filter-by-rate"]').value = minRate

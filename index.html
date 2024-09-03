@@ -26,6 +26,14 @@
         </form>
     </header>
     <main>
+        <dialog class="add-edit-dialog display-none">
+                <input type="text" class="loc-input" pattern="[A-Za-z]+" placeholder="Enter location name:" required>
+                <input type="text" class="rating-input" name="rating" pattern="[1-5]" placeholder="Enter rating (1-5)" required>
+
+                <button type="submit" class="submit-btn">Submit</button>
+            <button type="button" class="close-dialog-btn" onclick="app.onCloseDialog()">X</button>
+        </dialog>
+
         <div class="map"></div>
         <div>
             <section class="locs-container">
@@ -37,7 +45,8 @@
                     <div>
                         <label>
                             Min Rate:
-                            <input name="filter-by-rate" type="range" min="0" max="5" value="0" class="filter-rate-range"
+                            <input name="filter-by-rate" type="range" min="0" max="5" value="0"
+                                class="filter-rate-range"
                                 onchange="this.title=this.value;app.onSetFilterBy({minRate: this.value})" />
                         </label>
                     </div>
