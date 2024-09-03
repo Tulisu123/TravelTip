@@ -120,7 +120,7 @@ function getDistance(latLng1, latLng2, unit = 'K') {
 }
 
 function formatUserDistanceStrHTML(userPos, targetLoc) {
-    if (!userPos) return ''
+    if (!userPos || !targetLoc.lat || !targetLoc.lng) return ''
 
     const distance = getDistance(userPos, targetLoc)
     return `<span>Distance: ${distance.toFixed(2)} KM.</span>`
