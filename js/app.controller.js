@@ -242,7 +242,7 @@ function displayLoc(loc) {
 
     if (gUserPos) {
         const userDistance = utilService.getDistance(gUserPos, loc.geo)
-        el.querySelector('.loc-distance') = 'Distance: ' + userDistance + ' KM.'
+        el.querySelector('.loc-distance').innerText = 'Distance: ' + userDistance + ' KM.'
     } 
     
     el.classList.add('show')
