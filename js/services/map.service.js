@@ -56,7 +56,6 @@ function lookupAddressGeo(geoOrAddress) {
             // console.log('GEO IS', geo)
             return geo
         })
-
 }
 
 function addClickListener(cb) {
@@ -84,7 +83,6 @@ function getUserPosition() {
                 lat: res.coords.latitude,
                 lng: res.coords.longitude
             }
-            gUserPos = latLng
             resolve(latLng)
         }
         navigator.geolocation.getCurrentPosition(onSuccess, reject)
