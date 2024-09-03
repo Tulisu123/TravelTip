@@ -69,6 +69,11 @@
     /* background-image: conic-gradient(orange 0%, orange 64%, blue 64%, blue 81%, black 81%, black 100%); */
 }
 
+.loc-stats-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
 .loc-stats ul {
     list-style-type: none;
     display: inline-block;
