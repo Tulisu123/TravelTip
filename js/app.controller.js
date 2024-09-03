@@ -18,7 +18,8 @@ window.app = {
     onSetSortBy,
     onSetFilterBy,
     onCloseDialog,
-    onSubmitDialog
+    onSubmitDialog,
+    onToggleTheme
 }
 
 let gUserPos = null
@@ -395,4 +396,22 @@ function cleanStats(stats) {
         return acc
     }, [])
     return cleanedStats
+}
+
+function onToggleTheme() {
+    const themes = [
+        'stock-theme',
+        'another-theme',
+        'sunset-theme',
+        'forest-theme',
+        'ocean-theme'
+    ];
+
+    const elHtml = document.documentElement;
+    const currentThemeIndex = parseInt(elHtml.getAttribute('data-theme-index')) || 0; // Ensure this is an integer
+    const nextThemeIndex = (currentThemeIndex + 1) % themes.length;
+
+    elHtml.classList.remove(...themes); // Remove all theme classes
+    elHtml.setAttribute('data-theme-index', nextThemeIndex); // Update the data attribute
+    elHtml.classList.add(themes[nextThemeIndex]); // Add the new theme class
 }
