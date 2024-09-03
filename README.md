@@ -82,7 +82,8 @@ window.app = {
     onSetSortBy,
     onSetFilterBy,
     onCloseDialog,
-    onSubmitDialog
+    onSubmitDialog,
+    onToggleTheme
 }
 ```
 
